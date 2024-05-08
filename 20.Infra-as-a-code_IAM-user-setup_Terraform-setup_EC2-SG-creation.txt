@@ -1,0 +1,367 @@
+
+now we discuss infrastructure 
+
+infrastructure: what is infrastructure 
+---------------
+normal words roads, power, water, railway, airport if all there company will come, infrastructure is good companys will come if not there its not come, if its come not work properly, revenew not generate infra very important 
+
+infra is very important to create business...
+
+what we done untill done, create servers manuly. route53 records updated manuly that is proper way, we do manuly way 
+
+what is Disadvantages: 
+----------------------
+
+infra good business will come same infra good application run properly, how many require application we can build, first thing infra 
+
+1. manually create
+2. takes time 
+3. follow the sequences 
+   create security group 
+   create ec2
+   create r53 records
+   
+   some time forgot update r53 records and we create ec2 we are faceing errors, ansible forgot update records run run code we get errors take some time to resolve disadvantages 
+4. we need to check ech and every resource and note down manually   
+   what are the infrastructure there how can we tell, expences project what are instace create in AWS what are the recoured we create in aws how can we tell not nothing we need check each and every resource and note  down manually 
+   
+5. cost analysis 
+   we can't tell how much cost happend becouse we dont have proper resource 
+   
+this are issue we face becouse we create manually 
+
+Linux commands use do work above same disadvantages we have manually commands in shell script 
+
+few years back infra as a code came 
+
+Infra as a code:
+----------------
+forgot infra, first as a code do what are the advantages that linux or any 
+
+1. Version control --> not only devops or cloud any technology in IT proper task convert code 1st advantage came varsion control, what is there in version control we can maintain different version of infra. today we add newversion we can't delete old version. Infra at a time we not create all, over the time new resource add as pere requirements, client requirements.
+
+multiple persons can collobrate to create infra.
+
+ex: andriod its release newversion its not delete old version becouse they have maintain that at least last 5 to 6 version they will maintain 
+
+2. Same infra across environments --> normal we face issue DEV, QA, PROD etc 
+we have different environments do you think DEV & QA same environments like producation, everyware working in DEV, failed in producation. Application working dev but producation fail, becouse same environments not there. Consistent environments create we need infra as code require. Manualy run we forgot some thing, we take Infra as code one code we run all environments. Run the same code in all environments that create same infra everywere 
+
+3. CRUD --> Read. one server what configuration is there we don't know but ansible playbook we see we can easyly understan what are the configuration available in the ansible servers same this here
+
+what infrastructure there in aws we dont know but tarraform or infrastructure as code we see easyly understand what we create resource 
+
+not only create infrastructure if require update, if require delete, that all we can able to do manually not posible, Infra as code its properly happend   
+
+4. Invertory --> list of resource for the project in terms of infra 
+5. dependency -->  Terraform that dependency resolve automaticaly while CRUD 
+ec2 we need create we need create security group its dependency then one by one for there thet we need understand manually, that knowledge there then only we create manually.
+
+6. Cost --> creation and deletion takes less time, so cost can be reduced. 
+ list of resource available cost calculation is very easy not only that delete also easy, just one command its delete, if require createte, less time for creation and less time for deletion 
+ 
+7. code reuse: --> Ansible roles in Terraform modules, you can reuse the infra code created multiple time for different projects. 
+
+8. State management: --> implicit feature 
+
+this advantage when we pratice tarraform automatic we justifiy. 
+
+this all advantages Terraform very popular in very few years 
+
+Infra as code in terraform or AWS cloud formation,  AZURE ARM templates all are follow above principles 
+
+Terraform is mandatory for interview. Terraform you know means you know AWS on one cloud you know 
+
+Terraform advantage
+-------------------
+Hybrid cloud --> AZURE create, AWS create, GCP, ec2 anything you can create, if one website is there you can do any thing use tarraform through provider concept 
+
+
+Terraform configure:
+----------------------
+
+1.download terraform 
+
+search terraform download
+select install Terraform --HashiCorp Developer first one 
+select Windows --> AMD64 -> click download 
+unzip --> terraform.exe file will there --> put some folder this file like --> /E/software folder -> 
+
+2. provide the path in env variables 
+
+in system search click env --> select Edit the system environment (your or system) -> click Environmentvariables --> select Path -> click Edit -> click new -> give tarraform.exe software location (/E/software) --> click ok -> ok -> ok 
+
+in over computer cmd how do know terraform commands we can use environment variables to set the path so computer will know 
+
+ open CMD or gitbash :
+enter terraform 
+C:\users\user> terraform   
+
+its give output 
+
+C:\users\user> terraform version 
+
+if we didn't give environment its should not works 
+
+3. AWS CLI 
+
+link download AWS CLI :
+https://awscli.amazonaws.com/AWSCLIV2.msi
+
+AWS CLI need to download :
+--------------------------
+
+serach aws cli 
+
+AWS CLI - Command Line Interface -->  click What is the AWS Command --> click Windows -> click link on 1.Download and run the AWS CLI MSI installer for installer for Windows(64 bit) 
+
+instalation click next -> 
+
+then open cmd > type aws 
+
+give some output 
+
+
+How to work:
+-----------
+VS Code --> git 
+VS CODE sent code terraform.exe and terraform.exe use ASW CLI for Authantication to connect AWS account then its infra creation in AWS account 
+
+1. VS Code --> Git 
+2. VS Code --> terraform.exe -> AWS CLI for authatication 
+3. terraform.exe --> AWS Account infra creation 
+
+
+
+now we create GIT Repository in GIT HUB 
+----------------------------------------
+
+Terraform Repository
+
+
+
+syntax
+---------
+Terraform --> HCL (Hasicorp configuration Language) 
+
+same thing we disscus 
+
+Variables
+data types
+Conditions
+Functions
+loops
+terraform related concepts
+   outputs
+   locals
+   data sources 
+   count 
+   dynamic blocks
+ 
+VS Code open 
+--------------
+
+clone terraform repository 
+
+terraform/ec2 
+
+normal instuation
+ teach only ec2 creation but terraform use only ec2 creation no we do everything use terraform 
+
+ec2 creation 
+-------------
+1. security group --automatic dependency 
+2. ec2 instance creation 
+
+
+search terraform aws security group -terraform give one documention 
+
+or 
+search terraform
+Terraform by HashiCorp -> registry -> Browse Providers --> AWS --> Documentation --> we can see all there   
+
+
+terraform works with providers. we are using AWS here. so we should inform terraform that we are using AWS
+we need give provider information to terraform AWS or AZURE or GCP  
+
+1. provider configuration 
+
+Terraform by HashiCorp -> registry -> Browse Providers --> AWS --> USE PROVIDR -> we can see code how use 
+
+this is the code 
+
+terraform {
+  required_providers {
+    aws = {
+      source = "hashicorp/aws"
+      version = "5.48.0"
+    }
+  }
+}
+
+provider "aws" {
+  # Configuration options
+}
+
+
+extentions :
+
+shell    --> .sh 
+ansible  --> .yaml
+terraform --> .tf   --> terraform only reads .tf files. 
+
+
+terraform/ec2 
+
+provider.tf 
+
+
+terraform {
+  required_providers {
+    aws = {
+      source = "hashicorp/aws"
+      version = "5.48.0"
+    }
+  }
+}
+# provide authatication here access key & secret access key we can give but it push github other able see for that we use gitbash like below we can give region only here
+provider "aws" {
+  region = "us-est-1" # Configuration options crediantials not here 	
+}
+
+
+
+HCL syntax:
+-----------
+
+<some-name> "" {
+     key = value
+}
+
+authatication we create Iam user, accce key and secret key 
+aws configure --> AWS CLI is already installed. so you can run aws configure in windows 
+
+create terraform user in AWS IAM and get access key ID and secret Access Key use git bash 
+
+GITBASH
+
+/c/user/sri/devops/daws78s/repo/terraform (main)
+$ aws configure 
+AWS access key ID : access key info 
+AWS secret Access Key : secret Access Key  info 
+Default refion name [us-est-1]: us-est-1
+Default output format [None]: enter 
+
+
+aws configuration done -->authatication no problem  
+
+
+terraform/ec2 
+
+ec2.tf 
+
+sercurity group creation :
+---------------------------
+ 1. inbound  --> allow everything or olly port no 22 for pratice we give allow everything 
+ 2. outbound --> allow everything
+ 
+you know what are you doing if terraform you know but don't know how to use service its not use you know under line service also its use  
+
+#resource <resource-type> <resource-name > resource is default, type do dont change, 
+name we can chage 
+
+resource "aws_security_group" "allow_ssh" {
+   name = "allow-ssh"   #key value paires 
+   description = "allowing SSH access"
+   ingress {                        #inbound 
+       from_port        = 22   # port 22 give its understand its ssh 
+       to_port          = 22
+       protocol         = "tcp"
+       cidr_blocks      = ["0.0.0.0/0"]
+  }
+	  
+	  
+   egress {                        #outbound  allways open 
+       from_port        = 0     # from 0 to 0 means, opening all protocols        
+       to_port          = 0
+       protocol         = "-1"  # -1 all protocols  
+       cidr_blocks      = ["0.0.0.0/0"]
+  }
+	  
+	  tags = {
+	  name = "allow_tls"  #key value paire 
+	  createdBy = "nagarjuna" 
+   }
+}
+
+above one we mention we are creating AWS sercurity group name should be allow_ssh description allowing SSH access  ingress means inbound port 22 tcp protocol, ["0.0.0.0/0"] all from everything and egress is outbound all ports all protocol all from everything tags this is over resource 
+
+
+start 
+-----
+
+how to start 
+intialize terraform --> 
+
+/c/user/sri/devops/daws78s/repo/terraform/ec2 (main)
+$ terraform init --> terraform will check providers. it will download aws providers..  
+
+/c/user/sri/devops/daws78s/repo/terraform/ec2
+.terraform\provder--> folder created 
+terraform-provider-aws_v548.0x5.exe --file created 
+.terraform.lock.hd --> file created 
+
+
+/c/user/sri/devops/daws78s/repo/terraform/ec2 (main)
+$ terraform plan  --> terraform will shows us the resource it is going to create no create its only show 
+  validates syntax, if correct then it will show the resource it will create 
+  
+  
+/c/user/sri/devops/daws78s/repo/terraform/ec2 (main)
+$ terraform apply  
+Enter a value: yes 
+
+
+check AWS in security group it show allow_ssh security group grated 
+check inbound rules & outbound rules check 
+
+
+ec2 creation:
+--------------
+serach terraform aws ec2 instance 
+
+resource "aws_instance" "db" {
+   
+     ami = ""        # ami mandatory 
+	 vpc_security_group_ids = [aws_security_group.allow_ssh.id]  # this list this automatic dependency mgt we give "id" if sercurity group not creted its when ec2 creation its check first its create security group then its create ec2  
+	 instance_typw = "t3.micto"
+	 
+	 tags = {
+	   name = "db"  # tags name give same name will set
+     }	   
+}
+
+
+instalation run only one time 
+
+/c/user/sri/devops/daws78s/repo/terraform/ec2 (main)
+$ terraform plan  
+
+/c/user/sri/devops/daws78s/repo/terraform/ec2 (main)
+$ terraform apply -auto-approve   # its didn't ask yes automatic its take 
+
+
+aws instace create we can go and check 
+
+
+
+if i need destroy what i created use terraform
+
+/c/user/sri/devops/daws78s/repo/terraform/ec2 (main)
+$ terraform destroy -auto-approve   # its didn't ask yes automatic its take 
+
+automatic dependency management:
+
+terraform instace create first its create security group then its create ec2 instace its called automatic dependency management
+
+terraform destroy instace first its delete ec3 then its delete security group its called automatic dependency management
