@@ -329,12 +329,13 @@ check inbound rules & outbound rules check
 ec2 creation:
 --------------
 serach terraform aws ec2 instance 
+ec2.tf 
 
 resource "aws_instance" "db" {
    
      ami = ""        # ami mandatory 
 	 vpc_security_group_ids = [aws_security_group.allow_ssh.id]  # this list this automatic dependency mgt we give "id" if sercurity group not creted its when ec2 creation its check first its create security group then its create ec2  
-	 instance_typw = "t3.micto"
+	 instance_type = "t3.micto"
 	 
 	 tags = {
 	   name = "db"  # tags name give same name will set

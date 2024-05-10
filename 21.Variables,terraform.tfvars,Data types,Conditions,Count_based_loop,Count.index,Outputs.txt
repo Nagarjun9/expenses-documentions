@@ -1,0 +1,713 @@
+21.Variables,terraform.tfvars,Data types,Conditions,Count_based_loop,Count.index,Outputs
+
+
+
+discessed variables, data type, condition, loops count based loop, functions, output discess 
+
+Variables
+terraform.tfvars
+Data types
+Conditions
+Count based loop
+Count index
+Outputs
+
+
+
+.gitignore file very important 
+
+provider.exe file more then 300 mb not push in git for that every terraform repository  
+.gitignore mandatory its ignore some file its not push some files in git 
+
+interview
+what is .gitignore ? 
+you can ignore some files related ex: .exe files id related files 
+what are the file not push in git repository you put that files in .gitignore its not push in git repository 
+
+
+Variables 
+data types
+conditions 
+loops
+funcations 
+
+
+Variables:
+---------
+
+how to decleare the variables 
+
+shell: 
+USER=sivakumar --> declearing and assign value to variables 
+
+ansible:
+vars:
+     user: sivakumar -->declearing the variable and assign value to variable 
+	 
+terraform:
+variable "<var-name>" {
+     type = string/number/boll/list/map  # defin variable type we give here 
+	 default = "<default-value>"
+}
+
+
+terraform/variable 
+
+provider.tf # we need mention all repository 
+
+terraform {
+  required_providers {
+    aws = {
+      source = "hashicorp/aws"
+      version = "5.48.0"
+    }
+  }
+}
+
+terraform/variable 
+ec2.tf 
+
+resource "aws_instance" "db" {
+   
+     ami = var.image_id      # refer the variable # diffrent script language diffrent way to refer variable
+	 vpc_security_group_ids = [aws_security_group.allow_ssh.id]  #[] is list 
+	 instance_type = var.instance_type #refer variable  # left side aurgements(instance_type ) right side is values (var.instance_type), values we give dirctly or refer variables 
+	 
+	 tags = var.tags  # key = value if value start with "{" called map  
+}
+
+
+   resource "aws_security_group" "allow_ssh" {
+   name = var.sg_name 
+   description = var.sg_description
+   #it is block 
+   ingress {                        #inbound 
+       from_port        = var.ssh_port   # port 22 give its understand its ssh # its a number  
+       to_port          = var.ssh_port
+       protocol         = var.protocol
+       cidr_blocks      = var.allowed_cidr                  # ["0.0.0.0/0"]
+  }
+	  
+	  
+   egress {                        #outbound  allways open 
+       from_port        = 0     # from 0 to 0 means, opening all protocols        
+       to_port          = 0
+       protocol         = "-1"  # -1 all protocols  
+       cidr_blocks      = var.allowed_cidr         #["0.0.0.0/0"]
+  }
+	  
+	  tags = {
+	  name = "allow_ssh"  #key value paire 
+	  createdBy = "nagarjuna" 
+   }
+}
+
+
+
+terraform/variable 
+variable.tf 
+ 
+variable "image_id" {
+   type  = string   #optional
+   default = "ami-090252cbe067a9e58"  #optional
+   description = "RHEL-9 AMI ID"  # you can able give anything 
+}
+
+variable "instance_type" {
+     default = "t3.micro"  # remaing optional 
+	 type = string  # we also learn data type we mention data type here 
+}
+
+variable "tags" {
+    default = {
+	    project = "Expense"
+		Environnment = "Dev"
+		Modile = "DB"
+		Name = "DB"
+}
+
+variable "sg_name" {
+      default = "allow_ssh"
+}
+
+variable "sg_description" {
+     default = "allowing port 22"
+}
+
+
+variable "ssh_port" {
+     default = 22
+}
+
+variable "protocol"
+     default = "tcp"
+}
+
+
+variable "allowed_cidr" {
+     type = list(string)   # in list we have string value so we cangive like this 
+     default = ["0.0.0.0/0"]   # "0.0.0.0/0" mention this we need give type list & string 
+}
+
+
+
+
+how to do taging  is who create what project what resource what environment everything we can tag so other will know who worked on thei one 
+tagging strategy
+-----------------
+name of the resource
+which data 
+which project 
+which module
+which environment
+who created 
+
+
+/c/user/sri/devops/daws-78s/repos/terrfor 
+cd variable
+$terraform init # firsts time 
+
+$ terraform plan 
+$ terraform apply -auto-approve
+
+instance created go see in ec2 also check tags. in tags 
+
+destory 
+
+$ terraform destory -auto-approve
+
+
+
+default value not give what will happend we check 
+
+terraform/variable 
+variable.tf 
+ 
+variable "image_id" {
+   type  = string   #optional
+   #default = "ami-090252cbe067a9e58"  #optional
+   description = "RHEL-9 AMI ID"  # you can able give anything 
+}
+
+/c/user/sri/devops/daws-78s/repos/terrfor 
+cd variable
+
+$ terraform plan 
+
+variable name & type decleared but vaule not decleared so terraform not understand what value take so its prompt & ask 
+
+we need give value t3.micro
+
+
+terraform.tfvars  
+----------------
+in variable declearation we can give default values.
+terraform.tfvars will override default values in variables. this place we can supply the values
+
+/c/user/sri/devops/daws-78s/repos/terrfor/variable
+
+terraform.tfvars
+
+instance_type = "t3.micro"
+
+$ terraform plan 
+
+terraform.tfvars will always override default values in the variables
+
+terraform.tfvars file not push to github becouse its mention .gitignore file, each user its own file
+
+
+Command Line:
+-------------
+we can also enter variables in "Command Line"
+
+i am not intrested use .tfvars values and variables mention values 
+
+
+/c/user/sri/devops/daws-78s/repos/terrfor/variable
+$ terraform plan -var="instance_type=t3.medium" 
+
+any scripting language command prompt give value first preferance 
+
+file 
+
+$ terraform plan -var-file="instance_type=terraform.tfvars" 
+
+
+$ export TF_VAR_instance_type=t3.micro
+$ terraform plan 
+
+
+
+preferance use variables:
+-------------------------
+1. command line 
+2. tfvars
+3. environment variable
+4. variable default values
+
+general we set one default value but we can override as we require through command line, tfvars, environment variable we can do dynamicaly in CICD pipe line, producation we do big  instance dev we do small instance 
+
+this is the variable preferance and data types 
+
+
+conditions
+------------
+general language 
+
+if (expression) {
+      these will run if expression is true 
+}
+else {
+     these will run if expression is false	  
+}
+
+we can write in single line also 
+
+expression ? "this will run if expression is true" : "run if false" 
+
+var.instance_name == "db" ? "t3.small" : "t3.micro"
+
+some programs both conditions there 
+
+
+expense
+--------
+if DB, instance type should be t3.small of not db create t3.micro  we need create expense instance use this condition
+
+
+/c/user/sri/devops/daws-78s/repos/terraform/condition
+
+terraform/condition 
+
+provider.tf # we need mention all repository 
+
+terraform {
+  required_providers {
+    aws = {
+      source = "hashicorp/aws"
+      version = "5.48.0"
+    }
+  }
+}
+
+
+terraform/condition 
+
+ec2.tf 
+
+resource "aws_instance" "db" {
+   
+     ami = var.image_id      # refer the variable # diffrent script language diffrent way to refer variable
+	 #vpc_security_group_ids = [aws_security_group.allow_ssh.id]  #comment take default SG group i am intrested in condition now  
+	 instance_type = var.instance_name == "db" ? "t3.small" : "t3.micro" 	 
+}
+
+
+
+terraform/condition 
+
+variable.tf 
+
+variable "image_id" {
+   type  = string   #optional
+   default = "ami-090252cbe067a9e58"  #optional
+   description = "RHEL-9 AMI ID"  # you can able give anything 
+}
+
+variable "instance_type" {
+     default = "t3.micro"  # remaing optional 
+	 type = string  # we also learn data type we mention data type here 
+}
+
+variable "instance_name" {
+    default = "db"    #if we give other not "db" its come t3.micro  "backend"  check db in plan and backend in plan what instance_type will show 
+}
+
+how to write condition instance_type var.instance_name == "db" ? "t3.small" : "t3.micro" 
+
+
+/c/user/sri/devops/daws-78s/repos/terraform/condition
+
+$ terraform init 
+$ terraform plan 
+
+we can check here 
+
+
+
+
+loops
+------
+3 loops :
+count based loop
+for loop 
+dynamic block loop 
+
+
+how many instance create 3 db, backend, frontend 
+
+terraform count based loop
+---------------------------
+
+/c/user/sri/devops/daws-78s/repos/terraform/count 
+
+terraform/count
+
+provider.tf # we need mention all repository 
+
+terraform {
+  required_providers {
+    aws = {
+      source = "hashicorp/aws"
+      version = "5.48.0"
+    }
+  }
+}
+
+
+terraform/count 
+ec2.tf 
+
+
+resource "aws_instance" "db" {
+   
+     ami = ""        # ami mandatory 
+	 instance_type = "t3.micto"
+	 
+	 tags = {
+	   name = "db"  # tags name give same name will set
+     }	   
+}
+
+
+resource "aws_instance" "backend" {
+   
+     ami = ""        # ami mandatory 
+	 instance_type = "t3.micto"
+	 
+	 tags = {
+	   name = "backend"  # tags name give same name will set
+     }	   
+}
+
+
+resource "aws_instance" "frontend" {
+   
+     ami = ""        # ami mandatory 
+	 vpc_security_group_ids = [aws_security_group.allow_ssh.id]  # this list this automatic dependency mgt we give "id" if sercurity group not creted its when ec2 creation its check first its create security group then its create ec2  
+	 instance_type = "t3.micto"
+	 
+	 tags = {
+	   name = "frontend"  # tags name give same name will set
+     }	   
+}
+
+VPC group default wil add where we not mention 
+
+
+/c/user/sri/devops/daws-78s/repos/terraform/count 
+$ terraform init 
+$ terraform plan 
+
+3 resource will came for this same code repete
+
+
+terraform/count 
+ec2.tf 
+
+
+resource "aws_instance" "db" {
+     count = 3 
+     ami = ""        # ami mandatory 
+	 instance_type = "t3.micto"
+	 vpc_security_group_ids = [aws_security_group.allow_ssh.id]
+	 tags = {
+	   name = var.instance_name[count.index]  #first time its take 0 index means db, 2nd its take 2 index menas backend 
+     }	   
+}
+
+
+
+
+resource "aws_security_group" "allow_ssh" {
+   name = "allow-ssh"   #key value paires 
+   description = "allowing SSH access"
+   ingress {                        #inbound 
+       from_port        = 22   # port 22 give its understand its ssh 
+       to_port          = 22
+       protocol         = "tcp"
+       cidr_blocks      = ["0.0.0.0/0"]
+  }
+	  
+	  
+   egress {                        #outbound  allways open 
+       from_port        = 0     # from 0 to 0 means, opening all protocols        
+       to_port          = 0
+       protocol         = "-1"  # -1 all protocols  
+       cidr_blocks      = ["0.0.0.0/0"]
+  }
+	  
+	  tags = {
+	  name = "allow_tls"  #key value paire 
+	  createdBy = "nagarjuna" 
+   }
+}
+
+
+
+count = 3 we give lets plan 
+
+/c/user/sri/devops/daws-78s/repos/terraform/count 
+ $ terraform plan
+ $ terraform apply -auto-approve
+ 
+ here all db name instance create we dont need same name 
+ 
+ $ terraform destory -auto-approve
+ 
+ for that we can use count.index 
+ 
+ 
+ /c/user/sri/devops/daws-78s/repos/terraform/count 
+ variables.tf 
+ 
+  variable	"instance_name" {
+    type = list 
+	default = ["db", "backend", "frontend"]
+  }
+  
+  
+count 3 you give count.index 
+
+count loop 3 time its run 
+count.index -> what value come first in index, index start with 0,1,2 
+
+
+/c/user/sri/devops/daws-78s/repos/terraform/count 
+ $ terraform plan
+ $ terraform apply -auto-approve
+ 
+ 
+ 
+we can loop to create instance use count.index its will very effecty 
+
+
+
+Functions
+----------
+in terraform we not able to create the funcations we can use terraform provided default funcations or Built-in funcations 
+in above loop in count we give 3 so its create 3 instance if by mistake give 2 its create first 2 instance. what i need create hom many in variable.tf file in need size of of that variable.tf file default, if 3 create 3, if 4 create 4 for that we have lenth funcation
+
+Lenth
+
+
+terraform/count 
+ec2.tf 
+
+
+resource "aws_instance" "db" {
+     #count = 3 
+	 count = lenth(var.instance_name)
+     ami = ""        # ami mandatory 
+	 instance_type = "t3.micto"
+	 vpc_security_group_ids = [aws_security_group.allow_ssh.id]
+	 tags = {
+	   name = var.instance_name[count.index]  #first time its take 0 index means db, 2nd its take 2 index menas backend 
+     }	   
+}
+
+gitbash
+
+/c/user/sri/devops/daws-78s/repos/terraform/count 
+we give 
+$ terraform console   # its open terraform console directly syntax we can execute here 
+> max(30 	
+
+
+CMD
+C:\user\sri> terraform console
+> max(1,2,3)   --function 
+> min(1,2,3)   --funcation
+> join("-", ["sive", "kumar", "raj"] # it will join the siva-kumar-raj 
+> lower("HELLO")
+> split"-", ["sive", "kumar", "raj"] # its split 
+lot of funcation in terraform search terraform funcation 
+
+
+use above concepts use create expence project
+---------------------------------------------- 
+if DB, instance type should be t3.small
+
+3 instances, db, backend, frontend
+
+if DB t3.small 
+
+and route53 recourds 
+
+first time db so its create t3.small & 2nd time backend so its create t3.micro 
+
+ few tags are common, project, environment, terraform true is common 
+
+
+/c/user/sri/devops/daws-78s/repos/terraform/expense
+
+provider.tf # we need mention all repository 
+
+terraform {
+  required_providers {
+    aws = {
+      source = "hashicorp/aws"
+      version = "5.48.0"
+    }
+  }
+}
+
+
+provider "aws" {
+   region = "us-east-1"
+}
+
+
+/c/user/sri/devops/daws-78s/repos/terraform/expense
+
+
+
+ec2.tf
+
+resource "aws_instance" "db" {
+     count = lenth(var.instance_name)
+     ami = var.image_id      # refer the variable # diffrent script language diffrent way to refer variable
+	 vpc_security_group_ids = [aws_security_group.allow_ssh.id]  #[] is list 
+	 instance_type = var.instance_name[count.index] == "db" ? "t3.small" : "t3.micro"	 
+	 tags = merge(
+	        var.common_tags,
+			{
+			   name = var.instance_name[count.index] 
+			   module = var.instance_name[count.index] 
+			 }
+	}
+}
+
+
+   resource "aws_security_group" "allow_ssh" {
+   name = var.sg_name 
+   description = var.sg_description
+   #it is block 
+   ingress {                        #inbound 
+       from_port        = var.ssh_port   # port 22 give its understand its ssh # its a number  
+       to_port          = var.ssh_port
+       protocol         = var.protocol
+       cidr_blocks      = var.allowed_cidr                  # ["0.0.0.0/0"]
+  }
+	  
+	  
+   egress {                        #outbound  allways open 
+       from_port        = 0     # from 0 to 0 means, opening all protocols        
+       to_port          = 0
+       protocol         = "-1"  # -1 all protocols  
+       cidr_blocks      = var.allowed_cidr         #["0.0.0.0/0"]
+  }
+	  
+	  tags = {
+	  name = "allow_ssh"  #key value paire 
+	  createdBy = "nagarjuna" 
+   }
+}
+
+
+
+
+
+
+variable.tf 
+
+variable "instance_name" {
+     type = list 
+	 default = [ "db", "backend", "frontend" ]
+ 
+variable "image_id" {
+   type  = string   #optional
+   default = "ami-090252cbe067a9e58"  #optional
+   description = "RHEL-9 AMI ID"  # you can able give anything 
+}
+
+variable "instance_type" {
+     default = "t3.micro"  # remaing optional 
+	 type = string  # we also learn data type we mention data type here 
+}
+
+variable "common_tags" {         #we are using merge function in ec2.tf file 
+    default = {
+	    project = "Expense"
+		Environnment = "Dev"
+		Terraform = "true" 
+}
+
+variable "sg_name" {
+      default = "allow_ssh"
+}
+
+variable "sg_description" {
+     default = "allowing port 22"
+}
+
+
+variable "ssh_port" {
+     default = 22
+}
+
+variable "protocol"
+     default = "tcp"
+}
+
+
+variable "allowed_cidr" {
+     type = list(string)   # in list we have string value so we cangive like this 
+     default = ["0.0.0.0/0"]   # "0.0.0.0/0" mention this we need give type list & string 
+}
+
+
+
+
+
+
+
+/c/user/sri/devops/daws-78s/repos/terraform/expense
+$ terraform init 
+
+$ terraform plan 
+
+
+outputs
+-------
+we are creating infrastructure, what are private ip what are the public ip, what instance id we need to know that time no need to go to console i can print the output here use argument referance like below 
+
+
+/c/user/sri/devops/daws-78s/repos/terraform/expense
+output.tf 
+
+output "instance_info" {
+  value  =  aws_instance.db.public_ip
+}
+
+$ terraform plan -auto-approve
+
+outputs:  # its give info directly console 
+
+
+we need update route53 recourds so we can use output.tf file get output information to update the r53 recourds 
+
+
+/c/user/sri/devops/daws-78s/repos/terraform/expense
+r53.tf 
+
+
+we can create diffrent file so not confuse but we can able use single file also create over infrastructure 
+
+
+
+
+
+what are the funcation use in terraform ? 
+lenth and merge funcation as of now more will come in future session 
